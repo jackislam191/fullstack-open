@@ -11,12 +11,16 @@ function App() {
   const exercises2 = 7
   const part3 = 'State of a component'
   const exercises3 = 14
+
+  const contentCollection = [
+    {part:part1, exercise:exercises1},
+    {part:part2, exercise:exercises2},
+    {part:part3, exercise:exercises3},
+];
   return (
     <div>
       <Header course={course}></Header>
-      <Content part={part1} exercise={exercises1}></Content>
-      <Content part={part2} exercise={exercises2}></Content>
-      <Content part={part3} exercise={exercises3}></Content>
+      <Content contentCollection={contentCollection}></Content>
       <Total execriseArr={[exercises1, exercises2, exercises3]}></Total>
     </div>
   )
