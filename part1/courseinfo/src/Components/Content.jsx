@@ -1,8 +1,9 @@
 import React from 'react';
+import Part from './Part';
 
 const Content = (props) => {
     const contentItem = props.contentCollection.map((content, index) => 
-        <p key={index}>{content.part} {content.exercise}</p>
+        <Part key={index} part={content.part} exercise={content.exercise} />
     );
     return (
         <div>
