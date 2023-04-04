@@ -29,6 +29,7 @@ const App = () => {
   let all = (good + neutral + bad);
   let average = (all === 0) ? 0 : (good - bad)/ all;
   let postive = (all === 0) ? 0 : (good) / all * 100 + '%';
+ 
    return (
      <div>
         <h1>Give feedback</h1>
@@ -37,13 +38,17 @@ const App = () => {
         <button onClick={badCountHandler}>bad</button>
 
         <h1>statistics</h1>
-        <Statistics statTitle={'good'} statItem={good}></Statistics>
-        <Statistics statTitle={'netural'} statItem={neutral}></Statistics>
-        <Statistics statTitle={'bad'} statItem={bad}></Statistics>
-        <Statistics statTitle={'All'} statItem={all}></Statistics>
-        <Statistics statTitle={'average'} statItem={average}></Statistics>
-        <Statistics statTitle={'positive'} statItem={postive}></Statistics>
-
+        {(all === 0 )? <p>No feedback given</p> :
+        <div>
+          <Statistics statTitle={'good'} statItem={good}></Statistics>
+          <Statistics statTitle={'netural'} statItem={neutral}></Statistics>
+          <Statistics statTitle={'bad'} statItem={bad}></Statistics>
+          <Statistics statTitle={'All'} statItem={all}></Statistics>
+          <Statistics statTitle={'average'} statItem={average}></Statistics>
+          <Statistics statTitle={'positive'} statItem={postive}></Statistics>
+        </div>
+        }
+        
      </div>
    )
 }
