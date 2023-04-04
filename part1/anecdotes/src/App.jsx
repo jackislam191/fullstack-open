@@ -13,21 +13,41 @@ const App = () => {
     'The only way to go fast, is to go well.'
   ]
    
-  const [selected, setSelected] = useState(0)
+  const [selected, setSelected] = useState(0);
+  const [point, setPoint] = useState(new Array(anecdotes.length).fill(0));
+
 
   const getRandomInt = (min, max) => {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min);
   }
-  const clickHandler = () => {
+  const nextAnecdoteHandler = () => {
     setSelected(getRandomInt(0, anecdotes.length - 1)); 
   }
+
+  const voteHandler = () => {
+    const copyPoint = [...point];
+    copyPoint[selected] += 1;
+    setPoint(copyPoint);
+  }
+
+  // const nextAnecdoteHandler = () => {
+  //   if (selected < anecdotes.length - 1 ) {
+  //     setSelected(selected + 1);
+  //   } else {
+  //     setSelected(0);
+  //   }
+    
+  // }
   return (
-    <div onClick={clickHandler}>
-      {anecdotes[selected]}
-    </div>
-  )
+    <>
+      <div>{anecdotes[selected]}</div>
+      <p>has {point[selected]} votes</p>
+      <button onClick={voteHandler}>Vote</button>
+      <button onClick={nextAnecdoteHandler}>next anecdote</button>
+    </>
+  );
 }
 
 export default App
