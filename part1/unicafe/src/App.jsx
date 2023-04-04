@@ -6,7 +6,7 @@ const App = () => {
    const [good, setGood] = useState(0)
    const [neutral, setNeutral] = useState(0)
    const [bad, setBad] = useState(0)
-  
+   
    const goodCountHandler = () => {
     setGood(good + 1);
    }
@@ -18,6 +18,10 @@ const App = () => {
    const badCountHandler = () => {
     setBad(bad + 1);
    }
+
+  let all = (good + neutral + bad);
+  let average = (all === 0) ? 0 : (good - bad)/ all;
+  let postive = (all === 0) ? 0 : (good) / all * 100;
    return (
      <div>
         <h1>Give feedback</h1>
@@ -29,6 +33,9 @@ const App = () => {
         <p>good {good}</p>
         <p>netural {neutral}</p>
         <p>bad {bad}</p>
+        <p>All {all}</p>
+        <p>average {average}</p>
+        <p>postive {postive} %</p>
      </div>
    )
 }
