@@ -40,12 +40,22 @@ const App = () => {
   //   }
     
   // }
+  const max = Math.max(...point);
+  const maxIndex = point.indexOf(max);
   return (
     <>
-      <div>{anecdotes[selected]}</div>
+      <h1>Anecdote of the day</h1>
+      <p>{anecdotes[selected]}</p>
       <p>has {point[selected]} votes</p>
       <button onClick={voteHandler}>Vote</button>
       <button onClick={nextAnecdoteHandler}>next anecdote</button>
+      
+      {max !== 0 && 
+      <div>
+        <h1>Anecdote with most votes</h1>
+        <p>{anecdotes[maxIndex]}</p>
+        <p>has {max} votes</p>
+      </div>}
     </>
   );
 }
