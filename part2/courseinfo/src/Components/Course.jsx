@@ -4,7 +4,6 @@ import Content from './Content';
 
 const Course = (props) => {
     const parts = props.course.parts;
-
     return (
         <div>
             <Header key={props.course.id} name={props.course.name}></Header>
