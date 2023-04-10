@@ -10,14 +10,14 @@ const App = () => {
   const [nameFilter, setNameFilter] = useState('');
 
   useEffect(()=> {
-    console.log('effect');
+    // console.log('effect');
     axios.get('http://localhost:3001/persons')
     .then(response => {
-      console.log('promise fulfilled');
+      // console.log('promise fulfilled');
       setPersons(response.data);
     })
   }, []);
-  console.log('render', persons.length, 'persons');
+  // console.log('render', persons.length, 'persons');
 
   const submitFormHandler = (event) => {
     event.preventDefault();
@@ -33,7 +33,13 @@ const App = () => {
       number: newNumber,
       id: persons.length + 1
     }
-    setPersons(persons.concat(newObject));
+
+    axios.post('http://localhost:3001/persons', newObject)
+    .then(response => {
+      setPersons(persons.concat(response.data));
+      setNewName('');
+      setNewNumber('');
+    })
   }
 
   const nameInputHandler = (event) => {
@@ -62,6 +68,8 @@ const App = () => {
         onSubmit={submitFormHandler}
         onNameChange={nameInputHandler}
         onNumberChange={numberInputHandler}
+        nameVal={newName}
+        numVal={newNumber}
       />
       <h2>Numbers</h2>
       <Persons personsData={personsToShow}></Persons>
