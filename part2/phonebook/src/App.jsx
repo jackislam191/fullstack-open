@@ -25,16 +25,30 @@ const App = () => {
 
     for (const person of persons) {
       if (person.name == newName) {
-        alert(`${newName} is already added to phonebook`);
-        return;
+        
+        if (window.confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)) {
+          const newObject = {
+            name: newName,
+            number: newNumber,
+            id: persons.length + 1
+          }
+          updatePersonDataHandler(person.id, newObject);
+          getPersonsData();
+          setNewName('');
+          setNewNumber('');
+          return;
+        } else {
+          alert(`${newName} is already added to phonebook`);
+          return;
+        }
       }
     }
+    
     const newObject = {
       name: newName,
       number: newNumber,
       id: persons.length + 1
     }
-
     personsService.createNewPerson(newObject)
     .then(response => {
       setPersons(persons.concat(response.data));
@@ -64,6 +78,9 @@ const App = () => {
     }
   }
 
+  const updatePersonDataHandler = (id, newObject) => {
+    personsService.updatePerson(id, newObject);
+  }
   const personsToShow = persons.filter(person => person.name.toLowerCase().includes(nameFilter.toLowerCase()));
 
 
