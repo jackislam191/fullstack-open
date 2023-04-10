@@ -13,16 +13,13 @@ const App = () => {
   const [nameFilter, setNameFilter] = useState('');
 
   useEffect(()=> {
-    // console.log('effect');
-    // axios.get('http://localhost:3001/persons')
-    personsService.getAllPersons()
-    .then(response => {
-      // console.log('promise fulfilled');
-      setPersons(response.data);
-    })
+    getPersonsData();
   }, []);
-  // console.log('render', persons.length, 'persons');
 
+  const getPersonsData = async () => {
+    const result = await personsService.getAllPersons();
+    setPersons(result.data);
+  }
   const submitFormHandler = (event) => {
     event.preventDefault();
 
@@ -58,6 +55,15 @@ const App = () => {
     setNameFilter(event.target.value);
   }
 
+  const deletePersonDataHandler = (name, id) => {
+    if (window.confirm(`Delete ${name} ?`)) {
+      personsService.deletePerson(id)
+      .then(response=> {
+          getPersonsData();
+      });
+    }
+  }
+
   const personsToShow = persons.filter(person => person.name.toLowerCase().includes(nameFilter.toLowerCase()));
 
 
@@ -76,7 +82,7 @@ const App = () => {
         numVal={newNumber}
       />
       <h2>Numbers</h2>
-      <Persons personsData={personsToShow}></Persons>
+      <Persons personsData={personsToShow} onDeletePerson={deletePersonDataHandler}></Persons>
     </div>
   );
 }
