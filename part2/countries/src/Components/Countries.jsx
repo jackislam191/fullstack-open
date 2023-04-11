@@ -3,7 +3,6 @@ import { useState } from "react";
 import CountryDetail from "./CountryDetail";
 
 const Countries = ({ countries }) => {
-
     const [showDetail, setShowDetail] = useState({});
     const showHideDetailHandler = (nameKey) => {
         setShowDetail({...showDetail,
@@ -14,7 +13,7 @@ const Countries = ({ countries }) => {
     <div>
       {countries.length > 10
         ? "Too many matches, specify another filter"
-        : countries.map((country, index) => (
+        : countries.map((country) => (
             <div key={country.name.common}>
                 <div>
                     <p>{country.name.common} <button onClick={() => showHideDetailHandler(country.name.common)}>{showDetail[country.name.common] ? `hide` : `show`}</button></p>
