@@ -3,7 +3,7 @@ import personsService from './services/persons';
 import PersonForm from './Components/PersonForm';
 import Filter from './Components/Filter';
 import Persons from './Components/Persons';
-
+import Notification from './Components/Notification';
 
 
 const App = () => {
@@ -11,6 +11,8 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [nameFilter, setNameFilter] = useState('');
+  const [notifyMsg, setNotifyMsg] = useState(null);
+
 
   useEffect(()=> {
     getPersonsData();
@@ -52,8 +54,11 @@ const App = () => {
     personsService.createNewPerson(newObject)
     .then(response => {
       setPersons(persons.concat(response.data));
+      updateMsgContent(`Added ${newObject.name} `);
       setNewName('');
       setNewNumber('');
+    }).catch(error => {
+      updateMsgContent(`Fail to Add new person ${newObject.name}`);
     })
   }
 
@@ -79,13 +84,35 @@ const App = () => {
   }
 
   const updatePersonDataHandler = (id, newObject) => {
-    personsService.updatePerson(id, newObject);
+    personsService.updatePerson(id, newObject)
+    .then(response => {
+      // setNotifyMsg(`Successfully updated person ${newObject.name} with new phone number ${newObject.number}`);
+      // setTimeout(() => {
+      //   setNotifyMsg(null);
+      //   }, 5000);
+      updateMsgContent(`Successfully updated person ${newObject.name} with new phone number ${newObject.number}`);
+    }).catch(error => {
+      // setNotifyMsg(`Error in updating user ${newObject.name}`);
+      // setTimeout(() => {
+      //   setNotifyMsg(null);
+      //   }, 5000);
+      updateMsgContent(`Error in updating user ${newObject.name}`);
+    }
+    );
+  }
+
+  const updateMsgContent = (msgContent) => {
+    setNotifyMsg(msgContent);
+    setTimeout(() => {
+      setNotifyMsg(null);
+    }, 5000);
   }
   const personsToShow = persons.filter(person => person.name.toLowerCase().includes(nameFilter.toLowerCase()));
 
 
   return (
     <div>
+      <Notification message={notifyMsg} />
       <h2>Phonebook</h2>
       <Filter onChange={filterInputHandler}></Filter>
       {nameFilter}
