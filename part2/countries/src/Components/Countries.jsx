@@ -4,20 +4,22 @@ import CountryDetail from "./CountryDetail";
 
 const Countries = ({ countries }) => {
 
-    const [showDetail, setShowDetail] = useState(false);
-    const showHideDetailHandler = () => {
-        setShowDetail(!showDetail);
+    const [showDetail, setShowDetail] = useState({});
+    const showHideDetailHandler = (nameKey) => {
+        setShowDetail({...showDetail,
+        [nameKey]: !showDetail[nameKey]
+        });
     }
   return (
     <div>
       {countries.length > 10
         ? "Too many matches, specify another filter"
-        : countries.map((country) => (
+        : countries.map((country, index) => (
             <div key={country.name.common}>
                 <div>
-                    <p>{country.name.common}</p><button onClick={showHideDetailHandler}>show</button>
+                    <p>{country.name.common} <button onClick={() => showHideDetailHandler(country.name.common)}>{showDetail[country.name.common] ? `hide` : `show`}</button></p>
                 </div>
-                {showDetail ? <CountryDetail country={country}/> : null}
+                {showDetail[country.name.common] ? <CountryDetail country={country}/> : null}
             </div>
           ))}
     </div>
