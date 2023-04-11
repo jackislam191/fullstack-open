@@ -1,23 +1,23 @@
 import React from "react";
+import { useState } from "react";
+import CountryDetail from "./CountryDetail";
 
 const Countries = ({ countries }) => {
+
+    const [showDetail, setShowDetail] = useState(false);
+    const showHideDetailHandler = () => {
+        setShowDetail(!showDetail);
+    }
   return (
     <div>
       {countries.length > 10
         ? "Too many matches, specify another filter"
         : countries.map((country) => (
             <div key={country.name.common}>
-              <h1>{country.name.common}</h1>
-              <p>capital {country.capital}</p>
-              <p>area {country.area}</p>
-
-              <h3>languages:</h3>
-              <ul>
-                {Object.values(country.languages).map((lang) => (
-                  <li key={lang}>{lang}</li>
-                ))}
-              </ul>
-              <img src={country.flags['png']} alt={country.flags['alt']}></img>
+                <div>
+                    <p>{country.name.common}</p><button onClick={showHideDetailHandler}>show</button>
+                </div>
+                {showDetail ? <CountryDetail country={country}/> : null}
             </div>
           ))}
     </div>
