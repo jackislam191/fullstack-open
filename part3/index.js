@@ -43,6 +43,11 @@ app.get('/api/persons/:id', (request, response) => {
     }
 })
 
+app.delete('/api/persons/:id', (request, response) => {
+    const personId = Number(request.params.id);
+    persons = PERSONS_DATA.filter(person => person.id !== personId);
+    response.status(204).end();
+})
 
 app.get('/info', (request, response) => {
     const utcStr = new Date().toUTCString();
