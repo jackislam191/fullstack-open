@@ -1,6 +1,9 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 
+//init
+app.use(bodyParser.json());
 const PERSONS_DATA = [
     { 
         "id": 1,
@@ -27,7 +30,7 @@ const PERSONS_DATA = [
 app.get('/', (request, response) => {
     response.send('home page try');
 });
-
+``
 app.get('/api/persons/', (request, response) => {
     response.json(PERSONS_DATA);
 })
@@ -47,6 +50,19 @@ app.delete('/api/persons/:id', (request, response) => {
     const personId = Number(request.params.id);
     persons = PERSONS_DATA.filter(person => person.id !== personId);
     response.status(204).end();
+})
+
+app.post('/api/persons', (request, response) => {
+    const newPersonId = Math.random() * 100;
+    const newPerson = request.body;
+    const newPersonData = {
+        "id": newPersonId,
+        "name": newPerson.name,
+        "number": newPerson.number
+    };
+    
+    const updatedPersonsData = [...PERSONS_DATA, newPersonData];
+    response.json(updatedPersonsData);
 })
 
 app.get('/info', (request, response) => {
