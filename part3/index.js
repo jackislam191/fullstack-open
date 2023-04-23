@@ -55,6 +55,24 @@ app.delete('/api/persons/:id', (request, response) => {
 app.post('/api/persons', (request, response) => {
     const newPersonId = Math.random() * 100;
     const newPerson = request.body;
+    const isPersonNameExist = PERSONS_DATA.find(p => p.name === newPerson.name);
+    if (isPersonNameExist) {
+        return response.status(400).json({
+            error: 'person existed'
+        });
+    }
+
+    if (newPerson.name === undefined) {
+        return response.status(400).json({
+            error: 'name data is missing'
+        });
+    }
+    
+    if (newPerson.number === undefined) {
+        return response.status(400).json({
+            error: 'number data is missing'
+        });
+    }
     const newPersonData = {
         "id": newPersonId,
         "name": newPerson.name,
