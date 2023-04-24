@@ -9,7 +9,17 @@ app.use(bodyParser.json());
 
 
 //morgan middleware
-const morganTinyLogger = morgan('tiny');
+const morganTinyLogger = morgan(function (tokens, req, res) {
+    const morganRes = [
+        tokens.method(req, res),
+        tokens.url(req, res),
+        tokens.status(req, res),
+        tokens.res(req, res, 'content-length'), '-',
+        tokens['response-time'](req, res), 'ms'
+      ].join(' ');
+    return morganRes + ' ' + JSON.stringify(req.body);
+  })
+
 app.use(morganTinyLogger);
 
 const PERSONS_DATA = [
