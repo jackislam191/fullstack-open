@@ -1,9 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
+
 const app = express();
 
 //init
 app.use(bodyParser.json());
+
+
+//morgan middleware
+const morganTinyLogger = morgan('tiny');
+app.use(morganTinyLogger);
+
 const PERSONS_DATA = [
     { 
         "id": 1,
@@ -26,6 +34,7 @@ const PERSONS_DATA = [
         "number": "39-23-6423122"
       }
 ];
+
 
 app.get('/', (request, response) => {
     response.send('home page try');
