@@ -74,7 +74,6 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 app.post('/api/persons/', (request, response) => {
-    const newPersonId = Math.random()*100;
     const newPerson = request.body;
     const isPersonNameExist = PERSONS_DATA.find(p => p.name === newPerson.name);
     if (isPersonNameExist) {
@@ -95,7 +94,7 @@ app.post('/api/persons/', (request, response) => {
         });
     }
     const newPersonData = {
-        "id": newPersonId,
+        "id": newPerson.id,
         "name": newPerson.name,
         "number": newPerson.number
     };

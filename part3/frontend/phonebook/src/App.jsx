@@ -40,7 +40,7 @@ const App = () => {
       cleanForm();
     }
   }
-  const submitFormHandler = (event) => {
+  const addPerson = (event) => {
     event.preventDefault();
 
     const person = persons.find(p => p.name === newName);
@@ -55,9 +55,11 @@ const App = () => {
       number: newNumber,
       id: persons.length + 1
     }
+
     personsService.createNewPerson(newObject)
-    .then(response => {
-      setPersons(persons.concat(response.data));
+    .then((response) => {
+      let newData = [...persons, newObject];
+      setPersons(newData);
       updateMsgContent(`Added ${newObject.name} `);
       cleanForm();
     })
@@ -106,7 +108,7 @@ const App = () => {
       
       <h2>add a new</h2>
       <PersonForm 
-        onSubmit={submitFormHandler}
+        onSubmit={addPerson}
         onNameChange={nameInputHandler}
         onNumberChange={numberInputHandler}
         nameVal={newName}
