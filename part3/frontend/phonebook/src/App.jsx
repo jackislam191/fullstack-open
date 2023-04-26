@@ -15,13 +15,9 @@ const App = () => {
 
 
   useEffect(()=> {
-    getPersonsData();
+    personsService.getAllPersons().then((response) =>
+      setPersons(response.data))
   }, []);
-  
-  const getPersonsData = async () => {
-    const result = await personsService.getAllPersons();
-    setPersons(result.data);
-  }
 
   const cleanForm = () => {
     setNewName('')
@@ -31,12 +27,13 @@ const App = () => {
   const updatePerson = (person) => {
     const ok = window.confirm(`${newName} is already added to phonebook, replace the number?`)
     if (ok) {
-      personService.update(person.id, {...person, number: newNumber}).then((updatedPerson) => {
-        setPersons(persons.map(p => p.id !== person.id ? p :updatedPerson ))
-        notifyWith(`phon number of ${person.name} updated!`)
+      personsService.updatePerson(person.id, {...person, number: newNumber})
+      .then((updatedPerson) => {
+        setPersons(persons.map(p => p.id !== person.id ? p :updatedPerson.data ))
+        updateMsgContent(`phon number of ${person.name} updated!`)
       })
       .catch(() => {
-        notifyWith(`${person.name} has already been removed`, 'error')
+        updateMsgContent(`${person.name} has already been removed`, 'error')
         setPersons(persons.filter(p => p.id !== person.id))
       });
 
@@ -89,23 +86,6 @@ const App = () => {
     }
   }
 
-  const updatePersonDataHandler = (id, newObject) => {
-    personsService.updatePerson(id, newObject)
-    .then(response => {
-      // setNotifyMsg(`Successfully updated person ${newObject.name} with new phone number ${newObject.number}`);
-      // setTimeout(() => {
-      //   setNotifyMsg(null);
-      //   }, 5000);
-      updateMsgContent(`Successfully updated person ${newObject.name} with new phone number ${newObject.number}`);
-    }).catch(error => {
-      // setNotifyMsg(`Error in updating user ${newObject.name}`);
-      // setTimeout(() => {
-      //   setNotifyMsg(null);
-      //   }, 5000);
-      updateMsgContent(`Error in updating user ${newObject.name}`);
-    }
-    );
-  }
 
   const updateMsgContent = (msgContent) => {
     setNotifyMsg(msgContent);
@@ -113,8 +93,9 @@ const App = () => {
       setNotifyMsg(null);
     }, 5000);
   }
-  const personsToShow = persons.filter(person => person.name.toLowerCase().includes(nameFilter.toLowerCase()));
 
+  const byFilterField = p => p.name.toLowerCase().includes(nameFilter.toLowerCase());
+  const personsToShow = nameFilter ? persons.filter(byFilterField) : persons;
 
   return (
     <div>

@@ -73,8 +73,8 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end();
 })
 
-app.post('/api/persons', (request, response) => {
-    const newPersonId = Math.random() * 100;
+app.post('/api/persons/', (request, response) => {
+    const newPersonId = Math.random()*100;
     const newPerson = request.body;
     const isPersonNameExist = PERSONS_DATA.find(p => p.name === newPerson.name);
     if (isPersonNameExist) {
@@ -104,6 +104,17 @@ app.post('/api/persons', (request, response) => {
     response.json(updatedPersonsData);
 })
 
+app.put('/api/persons/:id', (request, response) => {
+    const personId = Number(request.params.id);
+    const newPersonData = {
+        "id": personId,
+        "name": request.body.name,
+        "number": request.body.number,
+        }
+    // const updatedPersonsData = [...PERSONS_DATA, newPersonData];
+    response.json(newPersonData);
+    }
+)
 app.get('/info', (request, response) => {
     const utcStr = new Date().toUTCString();
     const result = `Phonebook has info for ${PERSONS_DATA.length} people\r\n ${utcStr}`;

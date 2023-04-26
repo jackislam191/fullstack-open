@@ -13,7 +13,8 @@ const createNewPerson = (newObject) => {
 //     return axios.put(`${baseUrl}/${id}`, newObject);
 // }
 const updatePerson = (id, newObject) => {
-    return axios.put(baseUrl, newObject);
+    const url = `${baseUrl}/${id}`;
+    return axios.put(url, newObject);
 }
 
 const deletePerson = (id) => {
