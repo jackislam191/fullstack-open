@@ -1,12 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const app = express();
 
 //init
 app.use(bodyParser.json());
-
 
 //morgan middleware
 const morganTinyLogger = morgan(function (tokens, req, res) {
@@ -21,6 +21,8 @@ const morganTinyLogger = morgan(function (tokens, req, res) {
   })
 
 app.use(morganTinyLogger);
+
+app.use(cors());
 
 const PERSONS_DATA = [
     { 
@@ -46,10 +48,10 @@ const PERSONS_DATA = [
 ];
 
 
-app.get('/', (request, response) => {
-    response.send('home page try');
-});
-``
+// app.get('/', (request, response) => {
+//     response.send('home page try');
+// });
+
 app.get('/api/persons/', (request, response) => {
     response.json(PERSONS_DATA);
 })
