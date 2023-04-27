@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
+const Phonebook = require('./models/phonebook');
 
 const app = express();
 
@@ -24,47 +25,28 @@ app.use(morganTinyLogger);
 
 app.use(cors());
 
-const PERSONS_DATA = [
-    { 
-        "id": 1,
-        "name": "Arto Hellas", 
-        "number": "040-123456"
-      },
-      { 
-        "id": 2,
-        "name": "Ada Lovelace", 
-        "number": "39-44-5323523"
-      },
-      { 
-        "id": 3,
-        "name": "Dan Abramov", 
-        "number": "12-43-234345"
-      },
-      { 
-        "id": 4,
-        "name": "Mary Poppendieck", 
-        "number": "39-23-6423122"
-      }
-];
-
 
 // app.get('/', (request, response) => {
 //     response.send('home page try');
 // });
 
 app.get('/api/persons/', (request, response) => {
-    response.json(PERSONS_DATA);
+    Phonebook.find({}).then(phonebook => {
+        response.json(phonebook);
+    });
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const personId = Number(request.params.id);
-    const person = PERSONS_DATA.find(p => p.id === personId);
-    console.log(personId);
-    if (person) {
-        response.json(person);
-    } else {
-        response.status(404).end();
-    }
+    Phonebook.findById(request.params.id).then(phonebook=>{
+        if (phonebook) {
+            response.json(phonebook);
+        } else {
+            response.status(404).end();
+        }
+    }).catch(error => {
+        console.log(error)
+        response.status(500).end()
+      })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
