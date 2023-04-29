@@ -25,18 +25,15 @@ app.use(morganTinyLogger);
 
 app.use(cors());
 
-
-// app.get('/', (request, response) => {
-//     response.send('home page try');
-// });
-
-app.get('/api/persons/', (request, response) => {
+app.get('/api/persons/', (request, response, next) => {
     Phonebook.find({}).then(phonebook => {
         response.json(phonebook);
+    }).catch(error => {
+        next(error);
     });
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     Phonebook.findById(request.params.id).then(phonebook=>{
         if (phonebook) {
             response.json(phonebook);
@@ -44,26 +41,20 @@ app.get('/api/persons/:id', (request, response) => {
             response.status(404).end();
         }
     }).catch(error => {
-        console.log(error)
-        response.status(500).end()
+        response.status(500).end();
+        next(error);
       })
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-    const personId = Number(request.params.id);
-    persons = PERSONS_DATA.filter(person => person.id !== personId);
-    response.status(204).end();
+app.delete('/api/persons/:id', (request, response, next) => {
+    const personId = request.params.id;
+    Phonebook.findByIdAndRemove(personId).then(() => {
+        response.status(204).end();
+    }).catch(error => next(error));
 })
 
-app.post('/api/persons/', (request, response) => {
+app.post('/api/persons/', (request, response, next) => {
     const newPerson = request.body;
-    const isPersonNameExist = PERSONS_DATA.find(p => p.name === newPerson.name);
-    if (isPersonNameExist) {
-        return response.status(400).json({
-            error: 'person existed'
-        });
-    }
-
     if (newPerson.name === undefined) {
         return response.status(400).json({
             error: 'name data is missing'
@@ -75,27 +66,44 @@ app.post('/api/persons/', (request, response) => {
             error: 'number data is missing'
         });
     }
-    const newPersonData = {
-        "id": newPerson.id,
+
+    // const isExistPhonebook = Phonebook.find({name: newPerson.name}).then(doc => {
+    //     console.log(doc);
+    // });
+    // console.log(isExistPhonebook);
+    // Phonebook.find({"name": newPerson.name}).then(phonebook => {
+    //     if (phonebook) {
+    //         return response.status(400).json({
+    //             error: 'person existed'
+    //         });
+    //     }
+    // });
+    const newPhoneBookData = new Phonebook({
         "name": newPerson.name,
-        "number": newPerson.number
-    };
-    
-    const updatedPersonsData = [...PERSONS_DATA, newPersonData];
-    response.json(updatedPersonsData);
+        "number": newPerson.number,
+        "password": 'qwerasdf'
+    });
+    newPhoneBookData.save().then(phonebook => {
+        response.status(200).json(newPhoneBookData.save());
+    })
+    .catch(err => {
+        next(err);
+        response.status(400).json({"message": "unable to save the data"});
+    })
 })
 
-app.put('/api/persons/:id', (request, response) => {
-    const personId = Number(request.params.id);
+app.put('/api/persons/:id', (request, response, next) => {
+    const personId = request.params.id;
     const newPersonData = {
-        "id": personId,
         "name": request.body.name,
         "number": request.body.number,
-        }
-    // const updatedPersonsData = [...PERSONS_DATA, newPersonData];
-    response.json(newPersonData);
+    }
+    Phonebook.findByIdAndUpdate(personId, newPersonData, {new: true}).then(result => {
+        response.json(result);
+    }).catch(error => next(error));
     }
 )
+
 app.get('/info', (request, response) => {
     const utcStr = new Date().toUTCString();
     const result = `Phonebook has info for ${PERSONS_DATA.length} people\r\n ${utcStr}`;
